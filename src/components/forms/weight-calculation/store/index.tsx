@@ -79,7 +79,7 @@ const StoreWeightCalculation: FC = () => {
               <form onSubmit={onSubmitFormHandler}>
                 <Box
                   sx={{
-                    height:300,
+                    height: 250,
                     position: 'relative',
                   }}
                 >
