@@ -14,8 +14,6 @@ const Home: NextPage = () => (
     <Box
       component="main"
       sx={{
-        alignItems: 'center',
-        display: 'flex',
         flexGrow: 1,
         py: 8,
       }}

@@ -19,6 +19,8 @@ import {
   Divider,
 } from '@mui/material';
 
+import Chart from '@/components/units/weight-calculation/chart';
+
 // TODO: stringではなくnumberに変更するかも
 type Param = {
   height: string
@@ -131,7 +133,7 @@ const StoreWeightCalculation: FC = () => {
           xl={9}
           xs={12}
         >
-          {/* TODO: グラフ表示 */}
+          <Chart />
         </Grid>
       </Grid>
     </Container>
