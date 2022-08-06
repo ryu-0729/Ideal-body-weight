@@ -4,6 +4,7 @@ import {
   FormEvent,
   ChangeEvent,
   FocusEvent,
+  useState,
 } from 'react';
 import { useFormik, FormikConfig } from 'formik';
 import {
@@ -19,16 +20,39 @@ import {
   Divider,
 } from '@mui/material';
 
+import { useCalculationFuncs } from '@/hooks/useCalculationFuncs';
+
 import Chart from '@/components/units/weight-calculation/chart';
 
-// TODO: stringではなくnumberに変更するかも
 type Param = {
-  height: string
-  weight: string
+  height: number
+  weight: number
+};
+
+type BodyInfo = {
+  appropriateWeight: string
+  cosmeticWeight: string
+  cinderellaWeight: string
+};
+
+const initialBodyInfo: BodyInfo = {
+  appropriateWeight: '',
+  cosmeticWeight: '',
+  cinderellaWeight: '',
 };
 
 const StoreWeightCalculation: FC = () => {
-  const onSubmitHandler = useCallback<FormikConfig<Param>['onSubmit']>(() => {}, []);
+  const [bodyInfo, setBodyInfo] = useState<BodyInfo>(initialBodyInfo);
+  const { idealBodyWeight } = useCalculationFuncs();
+
+  const onSubmitHandler = useCallback<FormikConfig<Param>['onSubmit']>(
+    ({ height, weight }, isSubmitting) => {
+      const result = idealBodyWeight(height, weight);
+      setBodyInfo(result);
+      isSubmitting.setSubmitting(false);
+    },
+    [idealBodyWeight],
+  );
 
   const {
     values,
@@ -41,8 +65,8 @@ const StoreWeightCalculation: FC = () => {
     isSubmitting,
   } = useFormik<Param>({
     initialValues: {
-      height: '',
-      weight: '',
+      height: 0,
+      weight: 0,
     },
     enableReinitialize: true,
     // TODO: バリデーションの追加
