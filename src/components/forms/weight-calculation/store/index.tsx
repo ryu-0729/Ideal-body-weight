@@ -4,13 +4,13 @@ import {
   FormEvent,
   ChangeEvent,
   FocusEvent,
+  useState,
 } from 'react';
 import { useFormik, FormikConfig } from 'formik';
 import {
   Box,
   Container,
   Grid,
-  Typography,
   TextField,
   Button,
   Card,
@@ -19,16 +19,40 @@ import {
   Divider,
 } from '@mui/material';
 
+import { useCalculationFuncs } from '@/hooks/useCalculationFuncs';
+import storeWeightCalculationSchemas from '@/utils/schemas/storeWeightCalculation';
+
 import Chart from '@/components/units/weight-calculation/chart';
 
-// TODO: stringではなくnumberに変更するかも
 type Param = {
-  height: string
-  weight: string
+  height: number
+  weight: number
+};
+
+type BodyInfo = {
+  appropriateWeight: string
+  cosmeticWeight: string
+  cinderellaWeight: string
+};
+
+const initialBodyInfo: BodyInfo = {
+  appropriateWeight: '',
+  cosmeticWeight: '',
+  cinderellaWeight: '',
 };
 
 const StoreWeightCalculation: FC = () => {
-  const onSubmitHandler = useCallback<FormikConfig<Param>['onSubmit']>(() => {}, []);
+  const [bodyInfo, setBodyInfo] = useState<BodyInfo>(initialBodyInfo);
+  const { idealBodyWeight } = useCalculationFuncs();
+
+  const onSubmitHandler = useCallback<FormikConfig<Param>['onSubmit']>(
+    ({ height, weight }, isSubmitting) => {
+      const result = idealBodyWeight(height, weight);
+      setBodyInfo(result);
+      isSubmitting.setSubmitting(false);
+    },
+    [idealBodyWeight],
+  );
 
   const {
     values,
@@ -41,11 +65,11 @@ const StoreWeightCalculation: FC = () => {
     isSubmitting,
   } = useFormik<Param>({
     initialValues: {
-      height: '',
-      weight: '',
+      height: 0,
+      weight: 0,
     },
     enableReinitialize: true,
-    // TODO: バリデーションの追加
+    validationSchema: storeWeightCalculationSchemas,
     onSubmit: onSubmitHandler,
   });
 
@@ -121,6 +145,7 @@ const StoreWeightCalculation: FC = () => {
                       理想の体重計算
                     </Button>
                   </Box>
+                  {/* TODO: フォームリセットボタンを追加したい */}
                 </Box>
               </form>
             </CardContent>
@@ -133,7 +158,12 @@ const StoreWeightCalculation: FC = () => {
           xl={9}
           xs={12}
         >
-          <Chart />
+          <Chart
+            currentWeight={values.weight.toString()}
+            appropriateWeight={bodyInfo.appropriateWeight}
+            cosmeticWeight={bodyInfo.cosmeticWeight}
+            cinderellaWeight={bodyInfo.cinderellaWeight}
+          />
         </Grid>
       </Grid>
     </Container>
