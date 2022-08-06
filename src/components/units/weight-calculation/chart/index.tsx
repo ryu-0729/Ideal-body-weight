@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,6 +26,13 @@ ChartJS.register(
   Legend,
 );
 
+type Props = {
+  currentWeight: string
+  appropriateWeight: string
+  cosmeticWeight: string
+  cinderellaWeight: string
+};
+
 const options = {
   cornerRadius: 20,
   layout: { padding: 0 },
@@ -43,6 +50,7 @@ const options = {
       },
     },
   ],
+  // TODO: デフォルト値を設定したい
   yAxes: [
     {
       ticks: {
@@ -81,24 +89,32 @@ const labels = [
   'シンデレラ体重',
 ];
 
-// TODO: ダミーデータ
-const data = {
-  labels,
-  datasets: [
-    {
-      backgroundColor: '#3F51B5',
-      barPercentage: 0.5,
-      barThickness: 12,
-      borderRadius: 4,
-      categoryPercentage: 0.5,
-      data: [90, 78, 68, 57],
-      label: '2022',
-      maxBarThickness: 10,
-    },
-  ],
-};
+const Chart: FC<Props> = ({
+  currentWeight,
+  appropriateWeight,
+  cosmeticWeight,
+  cinderellaWeight
+}) => {
+  const data = useMemo(() => {
+    const bodyInfoData = [currentWeight, appropriateWeight, cosmeticWeight, cinderellaWeight];
+    return {
+      labels,
+      datasets: [
+        {
+          // TODO: bmiの度合いによって色を変更したい
+          backgroundColor: '#3F51B5',
+          barPercentage: 0.5,
+          barThickness: 12,
+          borderRadius: 4,
+          categoryPercentage: 0.5,
+          data: bodyInfoData,
+          label: '体重',
+          maxBarThickness: 10,
+        },
+      ],
+    };
+  }, [currentWeight, appropriateWeight, cosmeticWeight, cinderellaWeight]);
 
-const Chart: FC = () => {
   return (
     <Card>
       <CardHeader title="戒めの体重表示" />

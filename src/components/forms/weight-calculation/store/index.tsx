@@ -11,7 +11,6 @@ import {
   Box,
   Container,
   Grid,
-  Typography,
   TextField,
   Button,
   Card,
@@ -145,6 +144,7 @@ const StoreWeightCalculation: FC = () => {
                       理想の体重計算
                     </Button>
                   </Box>
+                  {/* TODO: フォームリセットボタンを追加したい */}
                 </Box>
               </form>
             </CardContent>
@@ -157,7 +157,12 @@ const StoreWeightCalculation: FC = () => {
           xl={9}
           xs={12}
         >
-          <Chart />
+          <Chart
+            currentWeight={values.weight.toString()}
+            appropriateWeight={bodyInfo.appropriateWeight}
+            cosmeticWeight={bodyInfo.cosmeticWeight}
+            cinderellaWeight={bodyInfo.cinderellaWeight}
+          />
         </Grid>
       </Grid>
     </Container>
