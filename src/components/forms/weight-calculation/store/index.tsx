@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 
 import { useCalculationFuncs } from '@/hooks/useCalculationFuncs';
+import storeWeightCalculationSchemas from '@/utils/schemas/storeWeightCalculation';
 
 import Chart from '@/components/units/weight-calculation/chart';
 
@@ -68,7 +69,7 @@ const StoreWeightCalculation: FC = () => {
       weight: 0,
     },
     enableReinitialize: true,
-    // TODO: バリデーションの追加
+    validationSchema: storeWeightCalculationSchemas,
     onSubmit: onSubmitHandler,
   });
 
