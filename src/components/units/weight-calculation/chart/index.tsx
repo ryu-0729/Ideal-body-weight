@@ -117,7 +117,7 @@ const Chart: FC<Props> = ({
 
   return (
     <Card>
-      <CardHeader title="戒めの体重表示" />
+      <CardHeader title="理想の体重" />
       <Divider />
       <CardContent>
         <Box
