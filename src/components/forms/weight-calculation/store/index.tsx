@@ -5,6 +5,7 @@ import {
   ChangeEvent,
   FocusEvent,
   useState,
+  MouseEventHandler,
 } from 'react';
 import { useFormik, FormikConfig } from 'formik';
 import {
@@ -61,6 +62,7 @@ const StoreWeightCalculation: FC = () => {
     handleSubmit,
     handleChange,
     handleBlur,
+    resetForm,
     isValid,
     isSubmitting,
   } = useFormik<Param>({
@@ -85,6 +87,11 @@ const StoreWeightCalculation: FC = () => {
     handleBlur(e);
   }, [handleBlur]);
 
+  const onClickResetButtonHandler = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
+    resetForm();
+    setBodyInfo(initialBodyInfo);
+  }, [resetForm]);
+
   return (
     <Container maxWidth={false}>
       <Grid
@@ -105,7 +112,7 @@ const StoreWeightCalculation: FC = () => {
               <form onSubmit={onSubmitFormHandler}>
                 <Box
                   sx={{
-                    height: 250,
+                    height: 300,
                     position: 'relative',
                   }}
                 >
@@ -145,7 +152,19 @@ const StoreWeightCalculation: FC = () => {
                       理想の体重計算
                     </Button>
                   </Box>
-                  {/* TODO: フォームリセットボタンを追加したい */}
+                  <Box sx={{ py: 2 }}>
+                    <Button
+                      color="primary"
+                      disabled={isSubmitting}
+                      fullWidth
+                      size="large"
+                      type="button"
+                      variant="outlined"
+                      onClick={onClickResetButtonHandler}
+                    >
+                      リセット
+                    </Button>
+                  </Box>
                 </Box>
               </form>
             </CardContent>
