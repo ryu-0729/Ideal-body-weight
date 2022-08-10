@@ -31,12 +31,14 @@ type Param = {
 };
 
 type BodyInfo = {
+  bmi: string
   appropriateWeight: string
   cosmeticWeight: string
   cinderellaWeight: string
 };
 
 const initialBodyInfo: BodyInfo = {
+  bmi: '',
   appropriateWeight: '',
   cosmeticWeight: '',
   cinderellaWeight: '',
@@ -119,7 +121,7 @@ const StoreWeightCalculation: FC = () => {
                   <TextField
                     name="height"
                     fullWidth
-                    label="身長"
+                    label="身長: cm"
                     margin="normal"
                     variant="outlined"
                     onBlur={onBlurInputHandler}
@@ -131,7 +133,7 @@ const StoreWeightCalculation: FC = () => {
                   <TextField
                     name="weight"
                     fullWidth
-                    label="体重"
+                    label="体重: kg"
                     margin="normal"
                     variant="outlined"
                     onBlur={onBlurInputHandler}
@@ -178,6 +180,7 @@ const StoreWeightCalculation: FC = () => {
           xs={12}
         >
           <Chart
+            bmi={bodyInfo.bmi}
             currentWeight={values.weight.toString()}
             appropriateWeight={bodyInfo.appropriateWeight}
             cosmeticWeight={bodyInfo.cosmeticWeight}

@@ -15,7 +15,9 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  Typography,
 } from '@mui/material';
+import { red, blue, green } from '@mui/material/colors';
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +29,7 @@ ChartJS.register(
 );
 
 type Props = {
+  bmi: string
   currentWeight: string
   appropriateWeight: string
   cosmeticWeight: string
@@ -90,18 +93,36 @@ const labels = [
 ];
 
 const Chart: FC<Props> = ({
+  bmi,
   currentWeight,
   appropriateWeight,
   cosmeticWeight,
   cinderellaWeight
 }) => {
+  const bmiMessage = useMemo(() => {
+    const parseBmi = parseFloat(bmi);
+    const unhealthyWeightLoss: boolean = parseBmi < 18.50;
+    const normalWeight: boolean = 18.50 <= parseBmi && parseBmi < 25.00;
+    const obeseLevel1: boolean = 25.00 <= parseBmi && parseBmi < 30.00;
+    const obeseLevel2: boolean = 30.00 <= parseBmi && parseBmi < 35.00;
+    const obeseLevel3: boolean = 35.00 <= parseBmi && parseBmi < 40.00;
+    const obeseLevel4: boolean = 40.00 <= parseBmi;
+
+    if (unhealthyWeightLoss) return '太りましょう！';
+    if (normalWeight) return '素晴らしい！';
+    if (obeseLevel1) return '幸せが詰まってる！';
+    if (obeseLevel2) return 'いまならまだ間に合う！';
+    if (obeseLevel3) return 'マズイかも、、、';
+    if (obeseLevel4) return '改善が必要です。。。';
+    return '素晴らしい！';
+  }, [bmi]);
+
   const data = useMemo(() => {
     const bodyInfoData = [currentWeight, appropriateWeight, cosmeticWeight, cinderellaWeight];
     return {
       labels,
       datasets: [
         {
-          // TODO: bmiの度合いによって色を変更したい
           backgroundColor: '#3F51B5',
           barPercentage: 0.5,
           barThickness: 12,
@@ -140,7 +161,16 @@ const Chart: FC<Props> = ({
           p: 2
         }}
       >
-        TODO: 結果によってのメッセージ変更
+        <Typography
+          variant="body1"
+        >
+          現在のBMI：
+        </Typography>
+        <Typography
+          variant="body1"
+        >
+          {bmi} {bmi ? bmiMessage : ''}
+        </Typography>
       </Box>
     </Card>
   );
