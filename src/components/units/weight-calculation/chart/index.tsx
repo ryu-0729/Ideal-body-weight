@@ -83,6 +83,12 @@ const options = {
     mode: 'index',
     titleFontColor: '#121828',
   },
+  scales: {
+    y: {
+      min: 0,
+      max: 120,
+    },
+  },
 };
 
 const labels = [
