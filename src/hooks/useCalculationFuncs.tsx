@@ -5,7 +5,6 @@
 import { useCallback } from 'react';
 
 export const useCalculationFuncs = () => {
-  // TODO: bmiの計算は要検討
   const idealBodyWeight = useCallback((height: number, weight: number) => {
     const heightSquared = (height / 100) ** 2;
     const bmi = weight / heightSquared;
