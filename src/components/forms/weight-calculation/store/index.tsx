@@ -5,6 +5,7 @@ import {
   ChangeEvent,
   FocusEvent,
   useState,
+  MouseEventHandler,
 } from 'react';
 import { useFormik, FormikConfig } from 'formik';
 import {
@@ -30,12 +31,14 @@ type Param = {
 };
 
 type BodyInfo = {
+  bmi: string
   appropriateWeight: string
   cosmeticWeight: string
   cinderellaWeight: string
 };
 
 const initialBodyInfo: BodyInfo = {
+  bmi: '',
   appropriateWeight: '',
   cosmeticWeight: '',
   cinderellaWeight: '',
@@ -61,6 +64,7 @@ const StoreWeightCalculation: FC = () => {
     handleSubmit,
     handleChange,
     handleBlur,
+    resetForm,
     isValid,
     isSubmitting,
   } = useFormik<Param>({
@@ -85,6 +89,11 @@ const StoreWeightCalculation: FC = () => {
     handleBlur(e);
   }, [handleBlur]);
 
+  const onClickResetButtonHandler = useCallback<MouseEventHandler<HTMLButtonElement>>(() => {
+    resetForm();
+    setBodyInfo(initialBodyInfo);
+  }, [resetForm]);
+
   return (
     <Container maxWidth={false}>
       <Grid
@@ -105,14 +114,14 @@ const StoreWeightCalculation: FC = () => {
               <form onSubmit={onSubmitFormHandler}>
                 <Box
                   sx={{
-                    height: 250,
+                    height: 300,
                     position: 'relative',
                   }}
                 >
                   <TextField
                     name="height"
                     fullWidth
-                    label="身長"
+                    label="身長: cm"
                     margin="normal"
                     variant="outlined"
                     onBlur={onBlurInputHandler}
@@ -124,7 +133,7 @@ const StoreWeightCalculation: FC = () => {
                   <TextField
                     name="weight"
                     fullWidth
-                    label="体重"
+                    label="体重: kg"
                     margin="normal"
                     variant="outlined"
                     onBlur={onBlurInputHandler}
@@ -145,7 +154,19 @@ const StoreWeightCalculation: FC = () => {
                       理想の体重計算
                     </Button>
                   </Box>
-                  {/* TODO: フォームリセットボタンを追加したい */}
+                  <Box sx={{ py: 2 }}>
+                    <Button
+                      color="primary"
+                      disabled={isSubmitting}
+                      fullWidth
+                      size="large"
+                      type="button"
+                      variant="outlined"
+                      onClick={onClickResetButtonHandler}
+                    >
+                      リセット
+                    </Button>
+                  </Box>
                 </Box>
               </form>
             </CardContent>
@@ -159,6 +180,7 @@ const StoreWeightCalculation: FC = () => {
           xs={12}
         >
           <Chart
+            bmi={bodyInfo.bmi}
             currentWeight={values.weight.toString()}
             appropriateWeight={bodyInfo.appropriateWeight}
             cosmeticWeight={bodyInfo.cosmeticWeight}

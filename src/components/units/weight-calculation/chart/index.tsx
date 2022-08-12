@@ -15,7 +15,9 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  Typography,
 } from '@mui/material';
+import { red, blue, green } from '@mui/material/colors';
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +29,7 @@ ChartJS.register(
 );
 
 type Props = {
+  bmi: string
   currentWeight: string
   appropriateWeight: string
   cosmeticWeight: string
@@ -50,7 +53,6 @@ const options = {
       },
     },
   ],
-  // TODO: デフォルト値を設定したい
   yAxes: [
     {
       ticks: {
@@ -80,6 +82,12 @@ const options = {
     mode: 'index',
     titleFontColor: '#121828',
   },
+  scales: {
+    y: {
+      min: 0,
+      max: 120,
+    },
+  },
 };
 
 const labels = [
@@ -90,18 +98,35 @@ const labels = [
 ];
 
 const Chart: FC<Props> = ({
+  bmi,
   currentWeight,
   appropriateWeight,
   cosmeticWeight,
   cinderellaWeight
 }) => {
+  const bmiMessage = useMemo(() => {
+    const parseBmi = parseFloat(bmi);
+    const unhealthyWeightLoss: boolean = parseBmi < 18.50;
+    const normalWeight: boolean = 18.50 <= parseBmi && parseBmi < 25.00;
+    const obeseLevel1: boolean = 25.00 <= parseBmi && parseBmi < 30.00;
+    const obeseLevel2: boolean = 30.00 <= parseBmi && parseBmi < 35.00;
+    const obeseLevel3: boolean = 35.00 <= parseBmi && parseBmi < 40.00;
+    const obeseLevel4: boolean = 40.00 <= parseBmi;
+
+    if (unhealthyWeightLoss) return 'ナイスシンデレラ！';
+    if (normalWeight) return '素晴らしい！';
+    if (obeseLevel1) return '肥満予備軍です。。';
+    if (obeseLevel2) return '適度な運動と食生活を見直しましょう！';
+    if (obeseLevel3) return 'マズイかも、、、';
+    if (obeseLevel4) return '改善が必要です。。。';
+  }, [bmi]);
+
   const data = useMemo(() => {
     const bodyInfoData = [currentWeight, appropriateWeight, cosmeticWeight, cinderellaWeight];
     return {
       labels,
       datasets: [
         {
-          // TODO: bmiの度合いによって色を変更したい
           backgroundColor: '#3F51B5',
           barPercentage: 0.5,
           barThickness: 12,
@@ -117,7 +142,7 @@ const Chart: FC<Props> = ({
 
   return (
     <Card>
-      <CardHeader title="戒めの体重表示" />
+      <CardHeader title="理想の体重" />
       <Divider />
       <CardContent>
         <Box
@@ -140,7 +165,16 @@ const Chart: FC<Props> = ({
           p: 2
         }}
       >
-        TODO: 結果によってのメッセージ変更
+        <Typography
+          variant="body1"
+        >
+          現在のBMI：
+        </Typography>
+        <Typography
+          variant="body1"
+        >
+          {bmi} {bmiMessage}
+        </Typography>
       </Box>
     </Card>
   );
