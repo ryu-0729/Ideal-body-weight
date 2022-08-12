@@ -53,7 +53,6 @@ const options = {
       },
     },
   ],
-  // TODO: デフォルト値を設定したい
   yAxes: [
     {
       ticks: {
@@ -114,13 +113,12 @@ const Chart: FC<Props> = ({
     const obeseLevel3: boolean = 35.00 <= parseBmi && parseBmi < 40.00;
     const obeseLevel4: boolean = 40.00 <= parseBmi;
 
-    if (unhealthyWeightLoss) return '太りましょう！';
+    if (unhealthyWeightLoss) return 'ナイスシンデレラ！';
     if (normalWeight) return '素晴らしい！';
-    if (obeseLevel1) return '幸せが詰まってる！';
-    if (obeseLevel2) return 'いまならまだ間に合う！';
+    if (obeseLevel1) return '肥満予備軍です。。';
+    if (obeseLevel2) return '適度な運動と食生活を見直しましょう！';
     if (obeseLevel3) return 'マズイかも、、、';
     if (obeseLevel4) return '改善が必要です。。。';
-    return '素晴らしい！';
   }, [bmi]);
 
   const data = useMemo(() => {
@@ -175,7 +173,7 @@ const Chart: FC<Props> = ({
         <Typography
           variant="body1"
         >
-          {bmi} {bmi ? bmiMessage : ''}
+          {bmi} {bmiMessage}
         </Typography>
       </Box>
     </Card>
